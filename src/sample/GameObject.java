@@ -31,10 +31,6 @@ public class GameObject {
         return view;
     }
 
-    public boolean isAlive() {
-        return alive;
-    }
-
     public boolean isDead() {
         return !alive;
     }
@@ -63,4 +59,7 @@ public class GameObject {
     public boolean isCollidingWithArena(double x, double y, double width, double height){
         return getView().getBoundsInParent().intersects(x,y,width,height);
     }
+
+
+
 }

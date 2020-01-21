@@ -19,10 +19,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
-/**
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
 public class Main extends Application {
 
     private Pane root;
@@ -34,11 +30,11 @@ public class Main extends Application {
 
     private Parent createContent() {
         root = new Pane();
-        root.setPrefSize(600, 600);
+        root.setPrefSize(1000, 1000);
 
-        player = new Richard();
-        player.setVelocity(new Point2D(1, 0));
-        addGameObject(player, 300, 300);
+        player = new Drone();
+        player.setVelocity(new Point2D(10, 0));
+        addGameObject(player, 30, 30);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -108,20 +104,9 @@ public class Main extends Application {
         player.update();
 
         if (Math.random() < 0.02) {
-            addEnemy(new Richard(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+            addEnemy(new Drone(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
-    }
 
-    private static class Player extends GameObjectWithImg {
-        Player() {
-            super(new Image(new File("drone.jpg").toURI().toString()));
-        }
-    }
-
-    private static class Enemy extends GameObjectWithImg {
-        Enemy() {
-            super(new Image(new File("drone.jpg").toURI().toString()));;
-        }
     }
 
     private static class Bullet extends GameObjectWithImg {
@@ -131,8 +116,8 @@ public class Main extends Application {
     }
 
     // ADDED - Custom 'Richard' class to show his face as a GameObject
-    private static class Richard extends GameObjectWithImg {
-        Richard() {
+    private static class Drone extends GameObjectWithImg {
+        Drone() {
             super(new Image(new File("rjm.jpg").toURI().toString()));
         }
     }
