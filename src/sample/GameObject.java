@@ -3,7 +3,7 @@ package sample;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 
-public class GameObject {
+public abstract class GameObject {
 
     protected Node view;
     private Point2D velocity = new Point2D(0, 0);
