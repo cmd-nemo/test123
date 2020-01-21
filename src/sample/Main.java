@@ -31,7 +31,6 @@ public class Main extends Application {
     private Parent createContent() {
         root = new Pane();
         root.setPrefSize(1000, 1000);
-
         player = new Drone();
         player.setVelocity(new Point2D(10, 0));
         addGameObject(player, 30, 30);
