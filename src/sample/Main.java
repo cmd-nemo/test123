@@ -127,14 +127,14 @@ public class Main extends Application {
 
     private static class Bullet extends GameObjectWithImg {
         Bullet() {
-            super(new Image(new File("bullet1.jpg").toURI().toString()));
+            super(new Image(new File("rjm2.png").toURI().toString()));
         }
     }
 
     // ADDED - Custom 'Richard' class to show his face as a GameObject
     private static class Richard extends GameObjectWithImg {
         Richard() {
-            super(new Image(new File("rjm.jpg").toURI().toString()));
+            super(new Image(new File("rjm1.png").toURI().toString()));
         }
     }
 
