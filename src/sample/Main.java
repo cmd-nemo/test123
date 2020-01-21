@@ -1,19 +1,24 @@
 package sample;
 
+import com.sun.jndi.toolkit.url.Uri;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
+import sample.GameObjectWithImg;
+import sample.GameObject;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * @author Almas Baimagambetov (almaslvl@gmail.com)
@@ -31,7 +36,7 @@ public class Main extends Application {
         root = new Pane();
         root.setPrefSize(600, 600);
 
-        player = new Player();
+        player = new Richard();
         player.setVelocity(new Point2D(1, 0));
         addGameObject(player, 300, 300);
 
@@ -71,6 +76,26 @@ public class Main extends Application {
 
                     root.getChildren().removeAll(bullet.getView(), enemy.getView());
                 }
+                //Top Collision
+
+                if(bullet.isCollidingWithArena(0,-10,600,10)){
+                bullet.setVelocity((new Point2D(-bullet.getVelocity().getY(),bullet.getVelocity().getX())));
+
+               //Bottom Collision
+                if(bullet.isCollidingWithArena(0,600,600,10)){
+                    bullet.setVelocity((new Point2D(-bullet.getVelocity().getY(),bullet.getVelocity().getX())));
+                }
+
+              //Left Collision
+                if(bullet.isCollidingWithArena(-10,0,10,600)){
+                    bullet.setVelocity(new Point2D(bullet.getVelocity().getY(),-bullet.getVelocity().getX()));
+                }
+
+                //Right Collision
+                    if(bullet.isCollidingWithArena(600,0,10,600)){
+                        bullet.setVelocity(new Point2D((bullet.getVelocity().getY()),-bullet.getVelocity().getX()));
+                    }
+                }
             }
         }
 
@@ -83,25 +108,32 @@ public class Main extends Application {
         player.update();
 
         if (Math.random() < 0.02) {
-            addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+            addEnemy(new Richard(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
     }
 
-    private static class Player extends GameObject {
+    private static class Player extends GameObjectWithImg {
         Player() {
-            super(new Rectangle(40, 20, Color.BLUE));
+            super(new Image(new File("drone.jpg").toURI().toString()));
         }
     }
 
-    private static class Enemy extends GameObject {
+    private static class Enemy extends GameObjectWithImg {
         Enemy() {
-            super(new Circle(15, 15, 15, Color.RED));
+            super(new Image(new File("drone.jpg").toURI().toString()));;
         }
     }
 
-    private static class Bullet extends GameObject {
+    private static class Bullet extends GameObjectWithImg {
         Bullet() {
-            super(new Circle(5, 5, 5, Color.BROWN));
+            super(new Image(new File("bullet1.jpg").toURI().toString()));
+        }
+    }
+
+    // ADDED - Custom 'Richard' class to show his face as a GameObject
+    private static class Richard extends GameObjectWithImg {
+        Richard() {
+            super(new Image(new File("rjm.jpg").toURI().toString()));
         }
     }
 
@@ -123,6 +155,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+        System.out.println(new File(".").getAbsoluteFile());
         launch(args);
     }
 }

@@ -5,7 +5,7 @@ import javafx.scene.Node;
 
 public class GameObject {
 
-    private Node view;
+    protected Node view;
     private Point2D velocity = new Point2D(0, 0);
 
     private boolean alive = true;
@@ -59,5 +59,8 @@ public class GameObject {
 
     public boolean isColliding(GameObject other) {
         return getView().getBoundsInParent().intersects(other.getView().getBoundsInParent());
+    }
+    public boolean isCollidingWithArena(double x, double y, double width, double height){
+        return getView().getBoundsInParent().intersects(x,y,width,height);
     }
 }
