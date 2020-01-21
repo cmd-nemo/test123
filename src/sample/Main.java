@@ -1,6 +1,5 @@
 package sample;
 
-import com.sun.jndi.toolkit.url.Uri;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.geometry.Point2D;
@@ -13,16 +12,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import sample.GameObjectWithImg;
-import sample.GameObject;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
 public class Main extends Application {
 
     private Pane root;
