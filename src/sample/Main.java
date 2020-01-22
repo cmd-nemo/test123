@@ -101,7 +101,7 @@ public class Main extends Application {
     }
 
 
-    private void onUpdate() {
+    public void onUpdate() {
         if (left_held) {
             player.rotateLeft();
         }

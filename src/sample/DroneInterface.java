@@ -21,6 +21,7 @@ public class DroneInterface extends Main {
     private MyCanvas mc;
     private AnimationTimer timer;								// timer used for animation
     private VBox rtPane;										// vertical box for putting info
+    private Main arena;
 
     private void showAbout() {
         Alert alert = new Alert(AlertType.INFORMATION);				// define what box is
@@ -71,28 +72,38 @@ public class DroneInterface extends Main {
      * @return
      */
     private HBox setButtons() {
-        Button btnStart = new Button("Start");					// create button for starting
+        Button btnStart = new Button("Start");                    // create button for starting
         // now define event when it is pressed
         btnStart.setOnAction(event -> {
-            timer.start();									// its action is to start the timer
+            timer.start();                                    // its action is to start the timer
         });
 
-        Button btnStop = new Button("Pause");					// now button for stop
+        Button btnStop = new Button("Pause");                    // now button for stop
         btnStop.setOnAction(event -> {
-            timer.stop();									// and its action to stop the timer
+            timer.stop();                                    // and its action to stop the timer
         });
         Button btnAdd = new Button("Load");
         btnAdd.setOnAction(event -> {
 
-        }) ;
+        });
+        // now add these buttons + labels to a HBox
+        return new HBox(new Label("Run: "), btnStart, btnStop, new Label("Add: "), btnAdd);
+        }
 
-        Stage primaryStage = new Stage();
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        //Stage primaryStage = new Stage();
         primaryStage.setTitle("hb000671_Drone_Simulation");
         BorderPane bp = new BorderPane();
         bp.setPadding(new Insets(15, 20, 15, 25));
 
         bp.setTop(setMenu());											// put menu at the top
-
+        arena = new Main();
+        timer = new AnimationTimer(){
+            public void handle(long now){
+                arena.onUpdate();
+            }
+        };
         Group root = new Group();										// create group with canvas
         Canvas canvas = new Canvas( 400, 500 );
         root.getChildren().add( canvas );
@@ -118,7 +129,7 @@ public class DroneInterface extends Main {
         primaryStage.show();
 
 
-        return null;
+        //return null;
     }
 
     /**
