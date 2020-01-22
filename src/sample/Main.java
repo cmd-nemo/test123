@@ -2,10 +2,12 @@ package sample;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.effect.ColorAdjust;
+
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
@@ -13,8 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -22,20 +22,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 public class Main extends Application {
     static int ARENA_WIDTH = 1280;
     static int ARENA_HEIGHT = 720;
+
     private Pane root;
     private boolean space_held = false;
     private boolean left_held = false;
     private boolean right_held = false;
-    private List<GameObject> bullets = new ArrayList<>();
-    private List<GameObject> enemies = new ArrayList<>();
-    private List<GameObject> obstacles = new ArrayList<>();
+    private List<Bullet> bullets = new ArrayList<>();
+    private List<Enemy> enemies = new ArrayList<>();
+    private List<Sensor> sensors = new ArrayList<>();
 
     private GameObject player;
 
     private Parent createContent() {
+
         root = new Pane();
         root.setPrefSize(ARENA_WIDTH, ARENA_HEIGHT);
 
@@ -54,12 +57,12 @@ public class Main extends Application {
         return root;
     }
 
-    private void addBullet(GameObject bullet, double x, double y) {
+    private void addBullet(Bullet bullet, double x, double y) {
         bullets.add(bullet);
         addGameObject(bullet, x, y);
     }
 
-    private void addEnemy(GameObject enemy, double x, double y) {
+    private void addEnemy(Enemy enemy, double x, double y) {
         enemies.add(enemy);
         addGameObject(enemy, x, y);
     }
@@ -70,11 +73,11 @@ public class Main extends Application {
         root.getChildren().add(object.getView());
     }
 
-    private void addObstacle(GameObject obstacle1, double x, double y){
-        obstacle1.setX(x);
-        obstacle1.setY(y);
-        obstacles.add(obstacle1);
-        root.getChildren().add(obstacle1.getView());
+    private void addObstacle(Sensor sensor, double x, double y){
+        sensor.setX(x);
+        sensor.setY(y);
+        sensors.add(sensor);
+        root.getChildren().add(sensor.getView());
     }
 
     private void bounceOffArena(GameObject obj) {
@@ -132,7 +135,9 @@ public class Main extends Application {
                                     -bullet.getVelocity().getX(), -bullet.getVelocity().getY()
                             )
                     );
-                    ((Obstacle) obstacles).onCollide();
+                    for (Sensor o : sensors) {
+                        o.onCollide();
+                    }
                 }
                 //Top Collision
             }
@@ -147,11 +152,14 @@ public class Main extends Application {
         enemies.forEach(GameObject::update);
 
 
-        player.update();
+       player.update();
 
-        if (Math.random() < 0.01) {
-            //addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
-            addObstacle(new Obstacle(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+        if (Math.random() < 0.1) {
+            addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+        }
+
+        if (Math.random() < 0.5){
+            addObstacle(new Sensor(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
 
         if (player.getX() <= 0) {
@@ -170,7 +178,7 @@ public class Main extends Application {
 
     private static class Enemy extends GameObjectWithImg {
         Enemy() {
-            super(new Image(new File("rjm.jpg").toURI().toString()));
+            super(new Image(new File("rjm3.png").toURI().toString()));
         }
     }
 
@@ -186,19 +194,22 @@ public class Main extends Application {
             super(new Image(new File("rjm1.png").toURI().toString()));
         }
     }
-    private static class Obstacle extends GameObjectWithImg{
-        Obstacle(){ super(new Image(new File("rjm3.png").toURI().toString()));
+    private static class Sensor extends GameObjectWithImg{
+        Sensor(){ super(new Image(new File("obs2.png").toURI().toString()));
         }
 
         public void onCollide() {
             Lighting c = new Lighting();
-            c.setLight(new Light.Distant(45, 45, Color.BLUE));
+            c.setLight(new Light.Distant(45, 45, Color.LIGHTCYAN));
             ((ImageView) this.view).setEffect(c);
         }
 
     }
+
     @Override
     public void start(Stage stage) throws Exception {
+
+
         stage.setScene(new Scene(createContent()));
         stage.getScene().setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {

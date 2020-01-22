@@ -75,6 +75,4 @@ public abstract class GameObject {
                 this.getY() < x.getY() + 5 && x.getY() > this.getY() + 5;
     }
 
-
-
 }
