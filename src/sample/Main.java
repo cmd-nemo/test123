@@ -5,7 +5,11 @@ import javafx.application.Application;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.Light;
+import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -19,21 +23,25 @@ import java.util.List;
 
 
 public class Main extends Application {
-
+    static int ARENA_WIDTH = 1280;
+    static int ARENA_HEIGHT = 720;
     private Pane root;
-
+    private boolean space_held = false;
+    private boolean left_held = false;
+    private boolean right_held = false;
     private List<GameObject> bullets = new ArrayList<>();
     private List<GameObject> enemies = new ArrayList<>();
+    private List<GameObject> obstacles = new ArrayList<>();
 
     private GameObject player;
 
     private Parent createContent() {
         root = new Pane();
-        root.setPrefSize(600, 600);
+        root.setPrefSize(ARENA_WIDTH, ARENA_HEIGHT);
 
-        player = new Richard();
+        player = new NewPlayer();
         player.setVelocity(new Point2D(1, 0));
-        addGameObject(player, 300, 300);
+        addGameObject(player, ARENA_WIDTH/2, ARENA_HEIGHT/2);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -62,36 +70,74 @@ public class Main extends Application {
         root.getChildren().add(object.getView());
     }
 
+    private void addObstacle(GameObject obstacle1, double x, double y){
+        obstacle1.setX(x);
+        obstacle1.setY(y);
+        obstacles.add(obstacle1);
+        root.getChildren().add(obstacle1.getView());
+    }
+
+    private void bounceOffArena(GameObject obj) {
+        if(obj.isCollidingWithArena(0,-10,ARENA_WIDTH,10)) {
+            obj.setVelocity((new Point2D(-obj.getVelocity().getY(), obj.getVelocity().getX())));
+        }
+        //Bottom Collision
+        if(obj.isCollidingWithArena(0,ARENA_HEIGHT,ARENA_WIDTH,10)){
+            obj.setVelocity((new Point2D(-obj.getVelocity().getY(),obj.getVelocity().getX())));
+        }
+
+        //Left Collision
+        if(obj.isCollidingWithArena(-10,0,10,ARENA_HEIGHT)){
+            obj.setVelocity(new Point2D(obj.getVelocity().getY(),-obj.getVelocity().getX()));
+        }
+
+        //Right Collision
+        if(obj.isCollidingWithArena(ARENA_WIDTH,0,10,ARENA_HEIGHT)){
+            obj.setVelocity(new Point2D((obj.getVelocity().getY()),-obj.getVelocity().getX()));
+        }
+    }
+
+
     private void onUpdate() {
+        if (left_held) {
+            player.rotateLeft();
+        }
+
+        if (right_held) {
+            player.rotateRight();
+        }
+
+        if (space_held) {
+            Bullet bullet = new Bullet();
+            bullet.setVelocity(player.getVelocity().normalize().multiply(5));
+            addBullet(bullet, player.getView().getTranslateX(), player.getView().getTranslateY());
+        }
+
         for (GameObject bullet : bullets) {
             for (GameObject enemy : enemies) {
+
                 if (bullet.isColliding(enemy)) {
                     bullet.setAlive(false);
                     enemy.setAlive(false);
 
+
+                }
+
+
+                if (bullet.isColliding(enemy)) {
+                    bullet.setAlive(false);
                     root.getChildren().removeAll(bullet.getView(), enemy.getView());
+                    bullet.setVelocity(
+                            new Point2D(
+                                    -bullet.getVelocity().getX(), -bullet.getVelocity().getY()
+                            )
+                    );
+                    ((Obstacle) obstacles).onCollide();
                 }
                 //Top Collision
-
-                if(bullet.isCollidingWithArena(0,-10,600,10)){
-                bullet.setVelocity((new Point2D(-bullet.getVelocity().getY(),bullet.getVelocity().getX())));
-
-               //Bottom Collision
-                if(bullet.isCollidingWithArena(0,600,600,10)){
-                    bullet.setVelocity((new Point2D(-bullet.getVelocity().getY(),bullet.getVelocity().getX())));
-                }
-
-              //Left Collision
-                if(bullet.isCollidingWithArena(-10,0,10,600)){
-                    bullet.setVelocity(new Point2D(bullet.getVelocity().getY(),-bullet.getVelocity().getX()));
-                }
-
-                //Right Collision
-                    if(bullet.isCollidingWithArena(600,0,10,600)){
-                        bullet.setVelocity(new Point2D((bullet.getVelocity().getY()),-bullet.getVelocity().getX()));
-                    }
-                }
             }
+            bounceOffArena(bullet);
+
         }
 
         bullets.removeIf(GameObject::isDead);
@@ -100,23 +146,31 @@ public class Main extends Application {
         bullets.forEach(GameObject::update);
         enemies.forEach(GameObject::update);
 
+
         player.update();
 
-        if (Math.random() < 0.02) {
-            addEnemy(new Richard(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+        if (Math.random() < 0.01) {
+            //addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+            addObstacle(new Obstacle(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
+        }
+
+        if (player.getX() <= 0) {
+            player.setX(ARENA_WIDTH);
+        } else if (player.getX() > ARENA_WIDTH) {
+            player.setX(0);
+        }
+
+        if (player.getY() <= 0) {
+            player.setY(ARENA_HEIGHT);
+        } else if (player.getY() > ARENA_HEIGHT) {
+            player.setY(0);
         }
 
     }
 
-    private static class Player extends GameObject {
-        Player() {
-            super(new Rectangle(40, 20, Color.BLUE));
-        }
-    }
-
-    private static class Enemy extends GameObject {
+    private static class Enemy extends GameObjectWithImg {
         Enemy() {
-            super(new Circle(15, 15, 15, Color.RED));
+            super(new Image(new File("rjm.jpg").toURI().toString()));
         }
     }
 
@@ -127,24 +181,46 @@ public class Main extends Application {
     }
 
     // ADDED - Custom 'Richard' class to show his face as a GameObject
-    private static class Richard extends GameObjectWithImg {
-        Richard() {
+    private static class NewPlayer extends GameObjectWithImg {
+        NewPlayer() {
             super(new Image(new File("rjm1.png").toURI().toString()));
         }
     }
+    private static class Obstacle extends GameObjectWithImg{
+        Obstacle(){ super(new Image(new File("rjm3.png").toURI().toString()));
+        }
 
+        public void onCollide() {
+            Lighting c = new Lighting();
+            c.setLight(new Light.Distant(45, 45, Color.BLUE));
+            ((ImageView) this.view).setEffect(c);
+        }
+
+    }
     @Override
     public void start(Stage stage) throws Exception {
         stage.setScene(new Scene(createContent()));
         stage.getScene().setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
-                player.rotateLeft();
+                left_held = true;
+                //player.rotateLeft();
             } else if (e.getCode() == KeyCode.RIGHT) {
-                player.rotateRight();
+                right_held = true;
             } else if (e.getCode() == KeyCode.SPACE) {
-                Bullet bullet = new Bullet();
-                bullet.setVelocity(player.getVelocity().normalize().multiply(5));
-                addBullet(bullet, player.getView().getTranslateX(), player.getView().getTranslateY());
+                space_held = true;
+
+            }
+        });
+
+        stage.getScene().setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.LEFT) {
+                left_held = false;
+                //player.rotateLeft();
+            } else if (e.getCode() == KeyCode.RIGHT) {
+                right_held = false;
+                //player.rotateRight();
+            } else if (e.getCode() == KeyCode.SPACE) {
+                space_held = false;
             }
         });
         stage.show();

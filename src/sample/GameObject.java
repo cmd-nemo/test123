@@ -18,6 +18,16 @@ public abstract class GameObject {
         view.setTranslateX(view.getTranslateX() + velocity.getX());
         view.setTranslateY(view.getTranslateY() + velocity.getY());
     }
+    public double getX() { return view.getTranslateX(); }
+    public double getY() { return view.getTranslateY(); }
+
+    public void setX(double x) {
+        this.view.setTranslateX(x);
+    }
+
+    public void setY(double y) {
+        this.view.setTranslateY(y);
+    }
 
     public void setVelocity(Point2D velocity) {
         this.velocity = velocity;
@@ -58,6 +68,11 @@ public abstract class GameObject {
     }
     public boolean isCollidingWithArena(double x, double y, double width, double height){
         return getView().getBoundsInParent().intersects(x,y,width,height);
+    }
+
+    public boolean isCollidingWithObject(GameObject x) {
+        return this.getX() < x.getX() + 5 && x.getX() > this.getX() + 5 &&
+                this.getY() < x.getY() + 5 && x.getY() > this.getY() + 5;
     }
 
 
