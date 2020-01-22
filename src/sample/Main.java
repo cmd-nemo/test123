@@ -67,6 +67,7 @@ public class Main extends Application implements Serializable {
                 timer.start();									// exit program
             }
         });
+        ///
         MenuItem mSave = new MenuItem("Save");					// whose sub menu has Save
         mSave.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {					// action on exit is
