@@ -2,8 +2,9 @@ package sample;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import java.io.Serializable;
 
-public abstract class GameObject {
+public abstract class GameObject implements Serializable{
 
     protected Node view;
     private Point2D velocity = new Point2D(0, 0);

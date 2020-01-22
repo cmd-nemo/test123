@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import java.io.Serializable;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -21,15 +22,13 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * @Author BR016005 extends hb000671
- */
-public class Main extends Application {
+
+public class Main extends Application implements Serializable {
     static int ARENA_WIDTH = 1280;
     static int ARENA_HEIGHT = 720;
 
@@ -68,6 +67,20 @@ public class Main extends Application {
                 timer.start();									// exit program
             }
         });
+        MenuItem mSave = new MenuItem("Save");					// whose sub menu has Save
+        mSave.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {					// action on exit is
+                save();
+            }
+        });
+
+        MenuItem mLoad = new MenuItem("Load");					// whose sub menu has Save
+        mLoad.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {					// action on exit is
+                load();
+            }
+        });
+        mFile.getItems().addAll(mExit, mSave, mLoad);
         mFile.getItems().addAll(mExit, mPause, mPlay);							// add exit to File menu
 
         Menu mHelp = new Menu("Help");							// create Help menu
@@ -81,6 +94,28 @@ public class Main extends Application {
         return menuBar;											// return the menu
     }
 
+    public void load() {
+        String url = "simulation.txt";
+        try {
+            ObjectInputStream loader = new ObjectInputStream(new FileInputStream(url));
+           root  = (Pane) loader.readObject();
+            loader.close();
+            onUpdate();										// redraw the world
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void save() {
+        String url = "simulation.txt";
+        try {
+            ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream(url));
+            saver.writeObject(root);
+            saver.close();
+        } catch(Exception e) {
+            System.out.println(e);
+        }
+    }
 
     private Parent createContent() {
 bP1 = new BorderPane();
