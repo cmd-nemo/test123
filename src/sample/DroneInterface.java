@@ -75,7 +75,12 @@ public class DroneInterface extends Main {
         Button btnStart = new Button("Start");                    // create button for starting
         // now define event when it is pressed
         btnStart.setOnAction(event -> {
-            timer.start();                                    // its action is to start the timer
+            System.out.println("The sdfa dnkj afn");
+
+            timer.start();// its action is to start the timer
+            System.out.println("The sdfa dnkj afn");
+
+
         });
 
         Button btnStop = new Button("Pause");                    // now button for stop
@@ -98,22 +103,26 @@ public class DroneInterface extends Main {
         bp.setPadding(new Insets(15, 20, 15, 25));
 
         bp.setTop(setMenu());											// put menu at the top
+
         arena = new Main();
         timer = new AnimationTimer(){
             public void handle(long now){
                 arena.onUpdate();
             }
         };
+
         Group root = new Group();										// create group with canvas
-        Canvas canvas = new Canvas( 400, 500 );
+        Canvas canvas = new Canvas( 1280, 720 );
+
         root.getChildren().add( canvas );
         bp.setLeft(root);												// load canvas to left area
 
-        mc = new MyCanvas(canvas.getGraphicsContext2D(), 400, 500);
+
+        //mc = new MyCanvas(canvas.getGraphicsContext2D(), 400, 500);
+
+
 
         setMouseEvents(canvas);											// set up mouse events
-
-
         rtPane = new VBox();											// set vBox on right to list items
         rtPane.setAlignment(Pos.TOP_LEFT);								// set alignment
         rtPane.setPadding(new Insets(15, 80, 80, 15));					// padding
@@ -121,7 +130,7 @@ public class DroneInterface extends Main {
 
         bp.setBottom(setButtons());										// set bottom pane with buttons
 
-        Scene scene = new Scene(bp, 900, 900);							// set overall scene
+        Scene scene = new Scene(bp, 1280, 720);							// set overall scene
         bp.prefHeightProperty().bind(scene.heightProperty());
         bp.prefWidthProperty().bind(scene.widthProperty());
 

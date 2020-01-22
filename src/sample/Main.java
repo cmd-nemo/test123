@@ -8,11 +8,15 @@ import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.effect.Light;
 import javafx.scene.effect.Lighting;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -22,39 +26,82 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
+/**
+ * @Author BR016005 extends hb000671
+ */
 public class Main extends Application {
     static int ARENA_WIDTH = 1280;
     static int ARENA_HEIGHT = 720;
 
     private Pane root;
+    private BorderPane bP1;
     private boolean space_held = false;
     private boolean left_held = false;
     private boolean right_held = false;
     private List<Bullet> bullets = new ArrayList<>();
     private List<Enemy> enemies = new ArrayList<>();
     private List<Sensor> sensors = new ArrayList<>();
+    public AnimationTimer timer ;
 
     private GameObject player;
+    MenuBar setMenu() {
+        MenuBar menuBar = new MenuBar();						// create main menu
+
+        Menu mFile = new Menu("File");							// add File main menu
+        MenuItem mExit = new MenuItem("Exit");					// whose sub menu has Exit
+        mExit.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {					// action on exit is
+                //timer.stop();									// stop timer
+                System.exit(0);									// exit program
+            }
+        });
+        MenuItem mPause = new MenuItem("Pause");					// whose sub menu has Exit
+        mPause.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {					// action on exit is
+                timer.stop();								// exit program
+            }
+        });
+        MenuItem mPlay = new MenuItem("Play");					// whose sub menu has Exit
+        mPlay.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent t) {
+                System.out.println("hello");// action on exit is
+                timer.start();									// exit program
+            }
+        });
+        mFile.getItems().addAll(mExit, mPause, mPlay);							// add exit to File menu
+
+        Menu mHelp = new Menu("Help");							// create Help menu
+        MenuItem mAbout = new MenuItem("About");				// add About sub men item
+        mAbout.setOnAction(actionEvent -> {
+            //showAbout();									// and its action to print about
+        });
+        mHelp.getItems().addAll(mAbout);						// add About to Help main item
+
+        menuBar.getMenus().addAll(mFile, mHelp);				// set main menu with File, Help
+        return menuBar;											// return the menu
+    }
+
 
     private Parent createContent() {
+bP1 = new BorderPane();
+
 
         root = new Pane();
         root.setPrefSize(ARENA_WIDTH, ARENA_HEIGHT);
-
+bP1.setCenter(root);
         player = new NewPlayer();
         player.setVelocity(new Point2D(1, 0));
         addGameObject(player, ARENA_WIDTH/2, ARENA_HEIGHT/2);
 
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 onUpdate();
             }
         };
+        bP1.setTop(setMenu());
         timer.start();
-
-        return root;
+        return bP1;
     }
 
     private void addBullet(Bullet bullet, double x, double y) {
@@ -158,7 +205,7 @@ public class Main extends Application {
             addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
 
-        if (Math.random() < 0.5){
+        if (Math.random() < 0.01){
             addObstacle(new Sensor(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
 
