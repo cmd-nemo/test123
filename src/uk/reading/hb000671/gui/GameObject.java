@@ -1,19 +1,21 @@
 package uk.reading.hb000671.gui;
 //required imports
+
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+
 import java.io.Serializable;
 
 /**
  * @author hb000671
- *  Class that handles the abstract class GameObject and implements Serializable.
+ * Class that handles the abstract class GameObject and implements Serializable.
  */
 
-public abstract class GameObject implements Serializable{
+public abstract class GameObject implements Serializable {
 
     protected Node view; //Accessor method to get a reference to the next node in the view
     private Point2D velocity = new Point2D(0, 0);
-//A 2D geometric point that represents the x, y coordinates.
+    //A 2D geometric point that represents the x, y coordinates.
 //It also represents a relative magnitude vector
     private boolean alive = true; //for if the enemy is not hit by bullet
 
@@ -28,13 +30,20 @@ public abstract class GameObject implements Serializable{
 
     /**
      * method update
+     *
      * @return view of the vector translating x and y
      */
-    public double getX() { return view.getTranslateX(); }
-    public double getY() { return view.getTranslateY(); }
+    public double getX() {
+        return view.getTranslateX();
+    }
+
+    public double getY() {
+        return view.getTranslateY();
+    }
 
     /**
      * method to set the x value
+     *
      * @param x
      */
     public void setX(double x) { //sets the X value
@@ -43,7 +52,8 @@ public abstract class GameObject implements Serializable{
 
     /**
      * method to set the y value
-     * @param y
+     *
+     * @param y  double: y takes an GPS locationvjhlj
      */
     public void setY(double y) {
         this.view.setTranslateY(y); //Sets the y value
@@ -51,7 +61,8 @@ public abstract class GameObject implements Serializable{
 
     /**
      * method for setting the velocity
-     * @param velocity
+     *
+     * @param velocity Poit2D:
      */
     public void setVelocity(Point2D velocity) { //sets the velocity based on the vector
         this.velocity = velocity;
@@ -59,6 +70,7 @@ public abstract class GameObject implements Serializable{
 
     /**
      * method setVelocity based on the vector
+     *
      * @return velocity
      */
 
@@ -68,6 +80,7 @@ public abstract class GameObject implements Serializable{
 
     /**
      * method to get View from node
+     *
      * @return view
      */
     public Node getView() {
@@ -76,6 +89,7 @@ public abstract class GameObject implements Serializable{
 
     /**
      * if bullet does not hit the enemy then not dead
+     *
      * @return alive;
      */
     public boolean isDead() {
@@ -85,6 +99,7 @@ public abstract class GameObject implements Serializable{
     /**
      * method set alive
      * if player is alive
+     *
      * @param alive
      */
     public void setAlive(boolean alive) {
@@ -93,6 +108,7 @@ public abstract class GameObject implements Serializable{
 
     /**
      * method for getting the direction based of rotate
+     *
      * @return
      */
 
@@ -117,18 +133,20 @@ public abstract class GameObject implements Serializable{
 
     /**
      * checks if bullets are colliding within bounds of arena and deflect
+     *
      * @param x
      * @param y
      * @param width
      * @param height
      * @return
      */
-    public boolean isCollidingWithArena(double x, double y, double width, double height){
-        return getView().getBoundsInParent().intersects(x,y,width,height);
+    public boolean isCollidingWithArena(double x, double y, double width, double height) {
+        return getView().getBoundsInParent().intersects(x, y, width, height);
     }
 
     /**
      * method for if anything is colliding with the arena
+     *
      * @param x
      * @return
      */

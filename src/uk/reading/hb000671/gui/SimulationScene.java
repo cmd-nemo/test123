@@ -1,5 +1,6 @@
 package uk.reading.hb000671.gui; //generated package name for the respected project
 //required imports
+
 import javafx.animation.AnimationTimer; //javafx AnimationTimer
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -7,6 +8,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+
 import java.io.Serializable;
 
 import javafx.scene.control.Menu;
@@ -26,10 +28,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * @author hb000671
- *  Class that handles the Game UI within canvas, with calbacks to the main interface and canvas.
+ * Class that handles the Game UI within canvas, with callbacks to the main interface and canvas.
  */
 public class SimulationScene extends Application implements Serializable { //functiom serializable used for load and save
     private static int ARENA_WIDTH = 1280; //arena width
@@ -37,10 +38,11 @@ public class SimulationScene extends Application implements Serializable { //fun
     /**
      * Class extends serializable
      * Declares the access modifiers required for setting the arena H and W
+     *
      * @ARENA_WIDTH is the arena width
      * @ARENA_HEIGHT is the arena height
      */
-    //ACESS MODIFIERS FOR BASE FUNCTIONS
+    //ACCESS MODIFIERS FOR BASE FUNCTIONS
     private Pane root;
     private BorderPane bP1; //defines new border pane
     private boolean space_held = false; //key down event
@@ -50,9 +52,10 @@ public class SimulationScene extends Application implements Serializable { //fun
     private List<Bullets> bullets = new ArrayList<>(); //array list of game objecta
     private List<Enemy> enemies = new ArrayList<>();
     private List<Sensor> sensors = new ArrayList<>();
-    public AnimationTimer timer ; //game loop
+    public AnimationTimer timer; //game loop
     /**
      * the Pane is declared from the too, border pane instantiates the outer canvas
+     *
      * @bP1 is the border pane within the root Of the Pane
      * @root is instantiating the top of the menuBar
      * @space_held on key press increases miniDrone
@@ -60,74 +63,75 @@ public class SimulationScene extends Application implements Serializable { //fun
      * @right_held on key press increases miniDrone
      */
     private GameObject player;
-    MenuBar setMenu() {
-        MenuBar menuBar = new MenuBar();						// creates a main menu
 
-        Menu mFile = new Menu("File");							// add File main menu
-        MenuItem mExit = new MenuItem("Exit");					//includes the ability to exit the window
+    MenuBar setMenu() {
+        MenuBar menuBar = new MenuBar();                        // creates a main menu
+
+        Menu mFile = new Menu("File");                            // add File main menu
+        MenuItem mExit = new MenuItem("Exit");                    //includes the ability to exit the window
         mExit.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {					// action on exit is
+            public void handle(ActionEvent t) {                    // action on exit is
                 //timer.stop();									// stop timer
-                System.exit(0);									// exit program
+                System.exit(0);                                    // exit program
             }
         });
-        MenuItem mPause = new MenuItem("Pause");					// menu has option to pause the simulation
+        MenuItem mPause = new MenuItem("Pause");                    // menu has option to pause the simulation
         mPause.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {					// action is pause
-                timer.stop();								// timer stops
+            public void handle(ActionEvent t) {                    // action is pause
+                timer.stop();                                // timer stops
             }
         });
-        MenuItem mPlay = new MenuItem("Play");				//Plays the simulation
+        MenuItem mPlay = new MenuItem("Play");                //Plays the simulation
         mPlay.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent t) {
                 System.out.println("hello");//test output to see if button worked
-                timer.start();									// game loop starts
+                timer.start();                                    // game loop starts
             }
         });
         ///
-        MenuItem mSave = new MenuItem("Save");					// saves the simulation menu tab
+        MenuItem mSave = new MenuItem("Save");                    // saves the simulation menu tab
         mSave.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {					//saves the simulation on click.
+            public void handle(ActionEvent t) {                    //saves the simulation on click.
                 save();
             }
         });
 
-        MenuItem mLoad = new MenuItem("Load");					// loads the simlation on play.
+        MenuItem mLoad = new MenuItem("Load");                    // loads the simlation on play.
         mLoad.setOnAction(new EventHandler<ActionEvent>() {
-            public void handle(ActionEvent t) {					// action on play is to reload saved arena.
+            public void handle(ActionEvent t) {                    // action on play is to reload saved arena.
                 load();
             }
         });
         mFile.getItems().addAll(mExit, mSave, mLoad);
-        mFile.getItems().addAll(mExit, mPause, mPlay);							// add exit to File menu
+        mFile.getItems().addAll(mExit, mPause, mPlay);                            // add exit to File menu
 
-        Menu mHelp = new Menu("Help");							// creates the Help menu
-        MenuItem mAbout = new MenuItem("About");				// adds about to the menu list
+        Menu mHelp = new Menu("Help");                            // creates the Help menu
+        MenuItem mAbout = new MenuItem("About");                // adds about to the menu list
         mAbout.setOnAction(actionEvent -> {
             //showAbout();									// and its action to print about
         });
-        mHelp.getItems().addAll(mAbout);						// add About to Help main item
+        mHelp.getItems().addAll(mAbout);                        // add About to Help main item
 
-        menuBar.getMenus().addAll(mFile, mHelp);				// set main menu with File, about
-        return menuBar;											// return the menu
+        menuBar.getMenus().addAll(mFile, mHelp);                // set main menu with File, about
+        return menuBar;                                            // return the menu
     }
 
     /**
      * This method is used to set the menu layout with the relevant tabs
      * simplest form of a class method with various call backs.
      * Implements serializable to load and save files
-     * @return menuBar;
      *
+     * @return menuBar;
      */
 
     public void load() {
         String url = "DroneSimulation.txt"; //output file on load
         try {
             ObjectInputStream loader = new ObjectInputStream(new FileInputStream(url));
-           root  = (Pane) loader.readObject();
+            root = (Pane) loader.readObject();
             loader.close();
-            onUpdate();										//runs the game loop onupdate
-        } catch(Exception e) { //includes exceptions on load
+            onUpdate();                                        //runs the game loop onupdate
+        } catch (Exception e) { //includes exceptions on load
             System.out.println(e); //prints out the exception statement
         }
     }
@@ -144,7 +148,7 @@ public class SimulationScene extends Application implements Serializable { //fun
             ObjectOutputStream saver = new ObjectOutputStream(new FileOutputStream(url));
             saver.writeObject(root);
             saver.close();
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println(e); //outputs the exception statement
         }
     }
@@ -162,15 +166,15 @@ public class SimulationScene extends Application implements Serializable { //fun
      * @return bP1
      */
     private Parent createContent() {
-bP1 = new BorderPane();
+        bP1 = new BorderPane();
 
 
         root = new Pane();
         root.setPrefSize(ARENA_WIDTH, ARENA_HEIGHT);
-bP1.setCenter(root);
+        bP1.setCenter(root);
         player = new NewPlayer();
         player.setVelocity(new Point2D(1, 0));
-        addGameObject(player, ARENA_WIDTH/2, ARENA_HEIGHT/2);
+        addGameObject(player, ARENA_WIDTH / 2, ARENA_HEIGHT / 2);
 
         timer = new AnimationTimer() {
             @Override
@@ -225,7 +229,7 @@ bP1.setCenter(root);
      * @param x
      * @param y
      */
-    private void addObstacle(Sensor sensor, double x, double y){
+    private void addObstacle(Sensor sensor, double x, double y) {
         sensor.setX(x);
         sensor.setY(y);
         sensors.add(sensor);
@@ -238,22 +242,22 @@ bP1.setCenter(root);
      */
     private void bounceOffArena(GameObject obj) {
         // collision from the top wall with the bullets.
-        if(obj.isCollidingWithArena(0,-10,ARENA_WIDTH,10)) {
+        if (obj.isCollidingWithArena(0, -10, ARENA_WIDTH, 10)) {
             obj.setVelocity((new Point2D(-obj.getVelocity().getY(), obj.getVelocity().getX())));
         }
         //Bottom Collision of walls with bullets
-        if(obj.isCollidingWithArena(0,ARENA_HEIGHT,ARENA_WIDTH,10)){
-            obj.setVelocity((new Point2D(-obj.getVelocity().getY(),obj.getVelocity().getX())));
+        if (obj.isCollidingWithArena(0, ARENA_HEIGHT, ARENA_WIDTH, 10)) {
+            obj.setVelocity((new Point2D(-obj.getVelocity().getY(), obj.getVelocity().getX())));
         }
 
         //Left  of walls with bullets
-        if(obj.isCollidingWithArena(-10,0,10,ARENA_HEIGHT)){
-            obj.setVelocity(new Point2D(obj.getVelocity().getY(),-obj.getVelocity().getX()));
+        if (obj.isCollidingWithArena(-10, 0, 10, ARENA_HEIGHT)) {
+            obj.setVelocity(new Point2D(obj.getVelocity().getY(), -obj.getVelocity().getX()));
         }
 
         //Right Collision of walls with bullets
-        if(obj.isCollidingWithArena(ARENA_WIDTH,0,10,ARENA_HEIGHT)){
-            obj.setVelocity(new Point2D((obj.getVelocity().getY()),-obj.getVelocity().getX()));
+        if (obj.isCollidingWithArena(ARENA_WIDTH, 0, 10, ARENA_HEIGHT)) {
+            obj.setVelocity(new Point2D((obj.getVelocity().getY()), -obj.getVelocity().getX()));
         }
     }
 
@@ -312,13 +316,13 @@ bP1.setCenter(root);
         bullets.forEach(GameObject::update);
         enemies.forEach(GameObject::update);
 
-       player.update(); //player movement naed on eveents in update method
+        player.update(); //player movement naed on eveents in update method
 
         if (Math.random() < 0.01) { //adds enemies based on 0.01% certainty, completely randomized
             addEnemy(new Enemy(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
 
-        if (Math.random() < 0.001){ //adds the sensor drones based on 0.01% certainty, random locstions
+        if (Math.random() < 0.001) { //adds the sensor drones based on 0.01% certainty, random locstions
             addObstacle(new Sensor(), Math.random() * root.getPrefWidth(), Math.random() * root.getPrefHeight());
         }
 
@@ -333,7 +337,6 @@ bP1.setCenter(root);
         } else if (player.getY() > ARENA_HEIGHT) {
             player.setY(0);
         }
-
 
 
     }
@@ -369,8 +372,9 @@ bP1.setCenter(root);
     /**
      * creates an image of the sensor drone extending from GameObjectWithImg
      */
-    private static class Sensor extends GameObjectWithImg{
-        Sensor(){ super(new Image(new File("sens1.png").toURI().toString()));
+    private static class Sensor extends GameObjectWithImg {
+        Sensor() {
+            super(new Image(new File("sens1.png").toURI().toString()));
         }// definition for calling a method defined in the superclass.
 
         public void onCollide() { //on collision of bullet and obstacle sensor drone
