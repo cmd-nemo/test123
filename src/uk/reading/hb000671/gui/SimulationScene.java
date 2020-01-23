@@ -1,4 +1,4 @@
-package sample;
+package uk.reading.hb000671.gui;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -28,7 +28,7 @@ import java.util.List;
 
 
 
-public class Main extends Application implements Serializable {
+public class SimulationScene extends Application implements Serializable {
     static int ARENA_WIDTH = 1280;
     static int ARENA_HEIGHT = 720;
 
@@ -257,6 +257,8 @@ bP1.setCenter(root);
             player.setY(0);
         }
 
+
+
     }
 
     private static class Enemy extends GameObjectWithImg {
@@ -283,7 +285,7 @@ bP1.setCenter(root);
 
         public void onCollide() {
             Lighting c = new Lighting();
-            c.setLight(new Light.Distant(45, 45, Color.LIGHTCYAN));
+            c.setLight(new Light.Distant(45, 45, Color.HOTPINK));
             ((ImageView) this.view).setEffect(c);
         }
 

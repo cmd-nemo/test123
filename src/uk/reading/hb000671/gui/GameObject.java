@@ -1,4 +1,4 @@
-package sample;
+package uk.reading.hb000671.gui;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;

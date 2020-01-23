@@ -1,4 +1,4 @@
-package sample;
+package uk.reading.hb000671.gui;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

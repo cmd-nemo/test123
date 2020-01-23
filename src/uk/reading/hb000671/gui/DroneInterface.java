@@ -1,4 +1,4 @@
-package sample;
+package uk.reading.hb000671.gui;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -17,11 +17,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class DroneInterface extends Main {
+public class DroneInterface extends SimulationScene {
     private MyCanvas mc;
     private AnimationTimer timer;								// timer used for animation
     private VBox rtPane;										// vertical box for putting info
-    private Main arena;
+    private SimulationScene arena;
 
     private void showAbout() {
         Alert alert = new Alert(AlertType.INFORMATION);				// define what box is
@@ -104,7 +104,7 @@ public class DroneInterface extends Main {
 
         bp.setTop(setMenu());											// put menu at the top
 
-        arena = new Main();
+        arena = new SimulationScene();
         timer = new AnimationTimer(){
             public void handle(long now){
                 arena.onUpdate();
